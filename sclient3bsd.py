@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-SERVER = "5.255.119.9"
-PORT = 42682
-USER = "linbsd"
-PASSWORD = "kdslhjv43"
+SERVER = ""
+PORT = 
+USER = ""
+PASSWORD = ""
 INTERVAL = 1 # Update interval
 
 import socket
