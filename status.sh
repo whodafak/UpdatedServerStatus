@@ -3,9 +3,8 @@
 normal=$(tput sgr0)
 bold=$(tput bold)
 
-PYTHON_CLIENT="https://lukanoski.com/clients/sclient3.py"
-PYTHONPSUTIL_CLIENT="https://lukanoski.com/clients/sclient-psutil.py"
-BASH_CLIENT="https://lukanoski.com/clients/sclient.sh"
+PYTHON_CLIENT="https://raw.githubusercontent.com/whodafak/UpdatedServerStatus/main/sclient3.py"
+PYTHONPSUTIL_CLIENT="https://raw.githubusercontent.com/whodafak/UpdatedServerStatus/main/sclient3bsd.py"
 
 CWD=$(pwd)
 
@@ -66,8 +65,8 @@ echo "ServerStatus Client Setup Script"
 echo "https://github.com/BotoX/ServerStatus"
 echo
 
-echo "Which client implementation do you want to use? [${bold}python${normal}, python-psutil, bash]"
-user_input "python" "python-psutil" "bash"
+echo "Which client implementation do you want to use? [${bold}python${normal}, python-psutil,]"
+user_input "python" "python-psutil"
 CLIENT="${answer,,}"
 
 if [ "$CLIENT" == "python" ] && [ -f "${CWD}/client.py" ]; then
@@ -83,15 +82,7 @@ elif [ "$CLIENT" == "python-psutil" ] && [ -f "${CWD}/client-psutil.py" ]; then
 	echo "Do you want to skip the client configuration and update it? [${bold}yes${normal}/no]"
 	user_input "yes" "no" "y" "n"
 	if [ "${answer,,}" == "yes" ] || [ "${answer,,}" == "y" ]; then
-		CLIENT_BIN="${CWD}/client-psutil.py"
-		SKIP=true
-	fi
-elif [ "$CLIENT" == "bash" ] && [ -f "${CWD}/client.sh" ]; then
-	echo "Bash implementation already found in ${CWD}"
-	echo "Do you want to skip the client configuration and update it? [${bold}yes${normal}/no]"
-	user_input "yes" "no" "y" "n"
-	if [ "${answer,,}" == "yes" ] || [ "${answer,,}" == "y" ]; then
-		CLIENT_BIN="${CWD}/client.sh"
+		CLIENT_BIN="${CWD}/clientbsd.py"
 		SKIP=true
 	fi
 fi
@@ -157,22 +148,10 @@ elif [ "$CLIENT" == "python-psutil" ]; then
 		-e "0,/^PORT = .*$/s//PORT = ${PORT}/" \
 		-e "0,/^USER = .*$/s//USER = \"${USERNAME}\"/" \
 		-e "0,/^PASSWORD = .*$/s//PASSWORD = \"${PASSWORD}\"/" > "${CWD}/client-psutil.py"
-	chmod +x "${CWD}/client-psutil.py"
-	CLIENT_BIN="${CWD}/client-psutil.py"
+	chmod +x "${CWD}/clientbsd.py"
+	CLIENT_BIN="${CWD}/clientbsd.py"
 	echo
-	echo "Python-psutil client copied to ${CWD}/client-psutil.py"
-
-elif [ "$CLIENT" == "bash" ]; then
-	echo "Magic going on..."
-	curl -L "$BASH_CLIENT" | sed -e "0,/^SERVER=.*$/s//SERVER=\"${SERVER}\"/" \
-		-e "0,/^PORT=.*$/s//PORT=${PORT}/" \
-		-e "0,/^USER=.*$/s//USER=\"${USERNAME}\"/" \
-		-e "0,/^PASSWORD=.*$/s//PASSWORD=\"${PASSWORD}\"/" > "${CWD}/client.sh"
-	chmod +x "${CWD}/client.sh"
-	CLIENT_BIN="${CWD}/client.sh"
-	echo
-	echo "Bash client copied to ${CWD}/client.sh"
-fi
+	echo "Python-psutil client copied to ${CWD}/clientbsd.py"
 
 echo -e "Do you want to autostart the script with your system? \e[0;31mThis requires sudo.\e[0m [${bold}yes${normal}/no]"
 user_input "yes" "no" "y" "n"
