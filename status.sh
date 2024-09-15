@@ -4,7 +4,7 @@ normal=$(tput sgr0)
 bold=$(tput bold)
 
 PYTHON_CLIENT="https://raw.githubusercontent.com/whodafak/UpdatedServerStatus/main/sclient3.py"
-PYTHONPSUTIL_CLIENT="https://raw.githubusercontent.com/whodafak/UpdatedServerStatus/main/sclient3bsd.py"
+PYTHONBSD_CLIENT="https://raw.githubusercontent.com/whodafak/UpdatedServerStatus/main/sclient3bsd.py"
 
 CWD=$(pwd)
 
@@ -61,12 +61,12 @@ user_input ()
 }
 
 echo
-echo "ServerStatus Client Setup Script"
-echo "https://github.com/BotoX/ServerStatus"
+echo "Updated ServerStatus Client Setup Script"
+echo "original from https://github.com/BotoX/ServerStatus update for bsd and python3 by whodafak"
 echo
 
-echo "Which client implementation do you want to use? [${bold}python${normal}, python-psutil,]"
-user_input "python" "python-psutil"
+echo "Which client implementation do you want to use? [${bold}python${normal}, pythonbsd,]"
+user_input "python" "pythonbsd"
 CLIENT="${answer,,}"
 
 if [ "$CLIENT" == "python" ] && [ -f "${CWD}/client.py" ]; then
@@ -77,7 +77,7 @@ if [ "$CLIENT" == "python" ] && [ -f "${CWD}/client.py" ]; then
 		CLIENT_BIN="${CWD}/client.py"
 		SKIP=true
 	fi
-elif [ "$CLIENT" == "python-psutil" ] && [ -f "${CWD}/client-psutil.py" ]; then
+elif [ "$CLIENT" == "pythonbsd" ] && [ -f "${CWD}/clientbsd.py" ]; then
 	echo "Python-psutil implementation already found in ${CWD}"
 	echo "Do you want to skip the client configuration and update it? [${bold}yes${normal}/no]"
 	user_input "yes" "no" "y" "n"
@@ -142,16 +142,16 @@ if [ "$CLIENT" == "python" ]; then
 	echo
 	echo "Python client copied to ${CWD}/client.py"
 
-elif [ "$CLIENT" == "python-psutil" ]; then
+elif [ "$CLIENT" == "pythonbsd" ]; then
 	echo "Magic going on..."
-	curl -L "$PYTHONPSUTIL_CLIENT" | sed -e "0,/^SERVER = .*$/s//SERVER = \"${SERVER}\"/" \
+	curl -L "$PYTHONBSD_CLIENT" | sed -e "0,/^SERVER = .*$/s//SERVER = \"${SERVER}\"/" \
 		-e "0,/^PORT = .*$/s//PORT = ${PORT}/" \
 		-e "0,/^USER = .*$/s//USER = \"${USERNAME}\"/" \
-		-e "0,/^PASSWORD = .*$/s//PASSWORD = \"${PASSWORD}\"/" > "${CWD}/client-psutil.py"
+		-e "0,/^PASSWORD = .*$/s//PASSWORD = \"${PASSWORD}\"/" > "${CWD}/clientbsd.py"
 	chmod +x "${CWD}/clientbsd.py"
 	CLIENT_BIN="${CWD}/clientbsd.py"
 	echo
-	echo "Python-psutil client copied to ${CWD}/clientbsd.py"
+	echo "PythonBSD client copied to ${CWD}/clientbsd.py"
 fi
 
 if [ ! $SKIP ]; then
